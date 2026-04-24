@@ -2,11 +2,33 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\TypeSafeService;
+
 class CheckController extends Controller
 {
-    public function test()
+    // Feature 1: Service Layer test
+    public function test(TypeSafeService $service)
     {
-        $number = "10";   // now string
-        return strtoupper($number);
+        $result1 = $service->formatNumber(10);
+        $result2 = $service->multiply(5, 3);
+
+        return $result1 . " | " . $result2;
+    }
+
+    // Feature 2: Larastan Playground
+
+    public function playground()
+    {
+        $data = "hello";
+
+        $x = $data . " world";
+
+        $arr = ['missing_key' => 'demo value'];
+
+        return $arr['missing_key'];
+    }
+    public function dashboard()
+    {
+        return view('dashboard');
     }
 }
