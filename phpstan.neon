@@ -11,3 +11,28 @@ parameters:
         - vendor
         - storage
         - bootstrap/cache
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    paths:
+        - app
+        - routes
+
+    level: 6  # Increased from 5 to 6 for stricter checking
+
+    excludePaths:
+        - vendor
+        - storage
+        - bootstrap/cache
+        - database/migrations
+        - tests
+
+    checkMissingIterableValueType: true
+    checkGenericClassInNonGenericObjectType: false
+    
+    ignoreErrors:
+        - '#Access to an undefined property#'
+    
+    doctrine:
+        enableSchemaValidation: false

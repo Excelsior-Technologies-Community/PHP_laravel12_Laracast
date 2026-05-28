@@ -8,9 +8,7 @@ Route::get('/', function () {
 });
 
 Route::get('/larastan-playground', [CheckController::class, 'playground']);
-
 Route::get('/test-service', [CheckController::class, 'test']);
-
 Route::get('/dashboard', [CheckController::class, 'dashboard']);
-
-Route::get('/check-type', [App\Http\Controllers\CheckController::class, 'checkStrictType']);
+Route::get('/check-type', [CheckController::class, 'checkStrictType']);
+Route::get('/advanced-demo', [CheckController::class, 'advancedDemo']); // New route
