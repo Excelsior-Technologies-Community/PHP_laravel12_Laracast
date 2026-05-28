@@ -3,25 +3,57 @@
 namespace App\DTOs;
 
 use App\Enums\TaskStatus;
-use Illuminate\Http\Request;
+use App\Enums\TaskPriority;
+use Illuminate\Support\Carbon;
 
-readonly class TaskData 
+class TaskData
 {
     public function __construct(
-        public string $title,
-        public string $description,
-        public TaskStatus $status,
-        public ?int $userId = null,
+        public readonly string $title,
+        public readonly ?string $description,
+        public readonly TaskStatus $status,
+        public readonly TaskPriority $priority,
+        public readonly int $userId,
+        public readonly ?Carbon $dueDate = null,
+        public readonly array $metadata = []
     ) {}
 
-
-    public static function fromRequest(Request $request): self 
+    public static function fromArray(array $data): self
     {
         return new self(
-            title: $request->input('title', 'Default Title'),
-            description: $request->input('description', 'No description'),
-            status: TaskStatus::from($request->input('status', 'pending')),
-            userId: $request->user()?->id,
+            title: $data['title'],
+            description: $data['description'] ?? null,
+            status: TaskStatus::from($data['status']),
+            priority: TaskPriority::from($data['priority']),
+            userId: $data['user_id'],
+            dueDate: isset($data['due_date']) ? Carbon::parse($data['due_date']) : null,
+            metadata: $data['metadata'] ?? []
         );
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'title' => $this->title,
+            'description' => $this->description,
+            'status' => $this->status->value,
+            'status_label' => $this->status->label(),
+            'priority' => $this->priority->value,
+            'priority_label' => $this->priority->label(),
+            'priority_color' => $this->priority->color(),
+            'user_id' => $this->userId,
+            'due_date' => $this->dueDate?->toISOString(),
+            'metadata' => $this->metadata,
+            'is_completed' => $this->status->isCompleted(),
+        ];
+    }
+
+    public function isOverdue(): bool
+    {
+        if (!$this->dueDate) {
+            return false;
+        }
+
+        return $this->dueDate->isPast() && !$this->status->isCompleted();
     }
 }

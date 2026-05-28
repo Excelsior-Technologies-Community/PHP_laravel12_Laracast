@@ -2,22 +2,30 @@
 
 namespace App\Enums;
 
-
-enum TaskStatus: string 
+enum TaskStatus: string
 {
     case PENDING = 'pending';
     case PROCESSING = 'processing';
     case COMPLETED = 'completed';
     case FAILED = 'failed';
 
-   
-    public function label(): string 
+    public function label(): string
     {
         return match($this) {
-            self::PENDING => '⏳ Task is Pending',
-            self::PROCESSING => '⚙️ Task is Processing',
-            self::COMPLETED => '✅ Completed Successfully',
-            self::FAILED => '❌ Task Failed',
+            self::PENDING => 'Pending',
+            self::PROCESSING => 'Processing',
+            self::COMPLETED => 'Completed',
+            self::FAILED => 'Failed',
         };
+    }
+
+    public function isCompleted(): bool
+    {
+        return $this === self::COMPLETED;
+    }
+
+    public function isFailed(): bool
+    {
+        return $this === self::FAILED;
     }
 }
